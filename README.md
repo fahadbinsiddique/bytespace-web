@@ -1,36 +1,84 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ByteSpace — landing page
 
-## Getting Started
+Marketing landing page for ByteSpace, built with the Next.js App Router.
 
-First, run the development server:
+## Stack
+
+| | |
+| --- | --- |
+| Framework | Next.js 16 (App Router, Turbopack, React Compiler) |
+| UI | React 19 |
+| Styling | Tailwind CSS v4 (CSS-first config) |
+| Language | TypeScript (strict) |
+| Linting | ESLint 9 + `eslint-config-next` |
+
+## Getting started
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev     # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Other scripts:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build   # production build
+npm run start   # serve the production build
+npm run lint    # eslint
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Project structure
 
-## Learn More
+```
+app/
+  layout.tsx        Root layout: fonts, <html>/<body>, page metadata
+  page.tsx          Landing page — imports sections in display order
+  globals.css       Tailwind entry point
+components/
+  home/             One section per file (one component per export)
+    Hero.tsx            Header + hero
+    PartnerLogos.tsx    Partner logo strip
+    CourseCategories.tsx  Category filter pills (client component)
+    FeaturedCourses.tsx Course grid (contains its CourseCard)
+    LearningCategories.tsx
+    GrowthFeatures.tsx  Two alternating feature rows
+    CreatorCta.tsx      Creator call-to-action banner
+    Testimonials.tsx
+    SiteFooter.tsx      Footer + newsletter
+content/            Typed copy and data — no JSX, no styling
+  site.ts               Page title / description
+  courses.ts
+  learning-categories.ts
+  growth-features.ts
+  testimonials.ts
+  footer.ts
+  partners.ts
+public/             Static assets served at the site root
+  hero/  partners/  figma/
+```
 
-To learn more about Next.js, take a look at the following resources:
+`app/page.tsx` lists the sections in the order they appear on the page — that
+order **is** the page order.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Conventions
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**One section, one file.** Every page section lives in `components/home/`
+and exports a single named component. A section-private helper (for example the
+pill button in `CourseCategories`) stays in the same file as its only consumer.
 
-## Deploy on Vercel
+**Content lives in `content/`.** Repeated or structured copy — card data,
+testimonials, footer link groups, logo dimensions — is typed and exported from
+`content/`, so components stay presentational and copy is editable in one place.
+Inline prose stays next to the markup it belongs to.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**Named exports.** Sections are exported by name, not by default, so imports
+stay greppable and consistent.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**No barrel files.** `CourseCategories` is a client component while the others
+are server components; re-exporting both from one `index.ts` invites accidental
+server/client bundling. Import sections from their files directly.
+
+**Path alias.** `@/*` maps to the project root (`@/components/...`,
+`@/content/...`).
+
+

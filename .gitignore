@@ -19,6 +19,9 @@ CLAUDE.md
 /.next/
 /out/
 
+# generated analysis output
+/graphify-out/
+
 # production
 /build
 

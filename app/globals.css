@@ -1,2 +1,21 @@
 @import "tailwindcss";
 
+@config "../tailwind.config.js";
+
+@utility font-poppins {
+  font-family: var(--font-poppins), sans-serif;
+}
+
+@utility font-satoshi {
+  font-family: var(--font-satoshi), sans-serif;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-satoshi), sans-serif;
+  }
+}
+
+main#top {
+  zoom: 0.9;
+}
